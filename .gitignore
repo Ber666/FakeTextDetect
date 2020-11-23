@@ -1,0 +1,6 @@
+.vector_cache/
+*.pt
+*.pkl
+*.jsonl
+*.json
+*.pth
