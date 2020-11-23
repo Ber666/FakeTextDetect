@@ -16,9 +16,11 @@ def binary_accuracy(predictions, labels):
 
 
 def evaluate(model, dataset, labels):
-    loader = DataLoader(dataset, batch_size=64, shuffle=True)
+    loader = DataLoader(dataset, batch_size=64, shuffle=False)
     epoch_loss = 0
     epoch_acc = 0
+    
+    tp, tn, fp, fn = 0, 0, 0, 0
     with torch.no_grad():
         for batch in tqdm(loader):
             input_ids = batch['input_ids'].to(device)
@@ -29,9 +31,20 @@ def evaluate(model, dataset, labels):
             #print(outputs)
             loss = outputs[0]
             acc = binary_accuracy(outputs[1], labels)
+            for out, j in zip(outputs[1], labels):
+                i = 0 if out[0] > out[1] else 1
+                if i == 1 and j == 1:
+                    tp += 1
+                if i == 1 and j == 0:
+                    fp += 1
+                if i == 0 and j == 0:
+                    tn += 1
+                if i == 0 and j == 1:
+                    fn += 1
+
             epoch_loss += loss
             epoch_acc += acc
-
+    print(tp, fp, tn, fn)
     return epoch_loss / len(dataset), epoch_acc / len(dataset)
 
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
