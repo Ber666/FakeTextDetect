@@ -3,7 +3,7 @@ import torch
 from tqdm import tqdm
 from util_bert import loadPickle
 from transformers import DistilBertForSequenceClassification
-from dataset_bert import DMDataset
+from bert_dataset import DMDataset
 from torch.utils.data import DataLoader
 def binary_accuracy(predictions, labels):
     # predictions are logits [batch_size, 2]

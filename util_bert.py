@@ -21,7 +21,7 @@ def binary_accuracy(predictions, labels):
 def evaluate(model, dataset, labels):
     
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-    loader = DataLoader(dataset, batch_size=16, shuffle=True)
+    loader = DataLoader(dataset, batch_size=16, shuffle=False)
     epoch_loss = 0
     epoch_acc = 0
     with torch.no_grad():

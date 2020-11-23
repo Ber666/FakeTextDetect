@@ -3,7 +3,7 @@ import torch
 from tqdm import tqdm
 from util_bert import loadPickle
 from transformers import DistilBertForSequenceClassification
-from dataset_bert import DMDataset
+from bert_dataset import DMDataset
 from torch.utils.data import DataLoader
 
 def predictDataset(model, dataset):
@@ -24,10 +24,10 @@ def predictDataset(model, dataset):
 
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 print("loading data...")
-test_encodings = loadPickle("test_encodings.pkl")
+test_encodings = loadPickle("test2_encodings.pkl")
 
 
-test_labels = loadPickle("test_labels.pkl")
+test_labels = loadPickle("test2_labels.pkl")
 #test_labels = [0] * len(test_encodings['input_ids'])
 print(len(test_labels))
 test_dataset = DMDataset(test_encodings, test_labels)
@@ -45,7 +45,6 @@ predictions = predictDataset(model, test_dataset)
 # .797 epoch2
 # best model 7937
 
-test_labels = loadPickle("test_labels.pkl")
 print(len(test_labels))
 print(len(predictions))
 tmp = 0
@@ -53,6 +52,10 @@ for t, p in zip(test_labels, predictions):
     tmp += (1 if t == p else 0)
 print(tmp/len(test_labels))
 
+with open("res.txt", "w", encoding="utf-8") as f:
+    for i in predictions:
+        f.write(str(i) + '\n')
+        
 # state_distilled_bert_base_epoch0
 # with 0 as gold label -> 0.5018
 # with true as gold label -> 0.4984
